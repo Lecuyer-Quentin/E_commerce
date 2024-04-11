@@ -1,0 +1,14 @@
+.card_dash{
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    &:hover{
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.9);
+    }
+    &_body{
+   
+    }
+}

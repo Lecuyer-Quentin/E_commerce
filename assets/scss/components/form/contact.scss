@@ -1,0 +1,57 @@
+.contact{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 10px;
+  width: 20rem;
+  min-height: 30rem;
+  padding: 20px 15px;
+  border-radius: 5px;
+  background-color: var(--tertiary-bg);
+
+  & input, textarea{
+    width: 90%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: var(--main-border) 1px solid;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+
+    &:focus{
+      border: var(--main-border) 1px solid var(--primary-bg);
+      outline: none;
+      caret-color: var(--tertiary-bg);
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.8);
+    }
+
+    &[type="submit"]{
+      background-color: var(--primary-bg);
+      color: var(--tertiary-text);
+      font-weight: bold;
+      cursor: pointer;
+    }
+  }
+  & textarea{
+    min-width: 90%;
+    max-width: 90%;
+    min-height: 10rem;
+  }
+  & select{
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: var(--main-border) 1px solid;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+  }
+  & label{
+    width: 100%;
+    text-align: left;
+    margin-bottom: 5px;
+    color: var(--secondary-text);
+    font-size: large;
+    font-weight: bold;
+  }
+}
