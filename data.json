@@ -1,0 +1,332 @@
+{
+
+    "tables":{
+        "products": {
+            "class":"table",
+            "header":[
+                {"type":"h2","content":"Produits"},
+                {"type":"p","content":"Liste des produits"}
+            ],
+            "columns":[
+                {"name":"nom","label":"Nom"},
+                {"name":"prix","label":"Prix"},
+                {"name":"id_categorie","label":"Catégorie"},
+                {"name":"date_creation","label":"Date de création"}
+            ],
+            "actions":[
+                {"type":"form","action":"controllers/products/remove.php","label":"Supprimer"},
+                {"type":"form","label":"Modifier", "value":"edit_product"}
+            ]
+        },
+        "users": {
+            "class":"table",
+            "header":[
+                {"type":"h2","content":"Utilisateurs"},
+                {"type":"p","content":"Liste des utilisateurs"}
+            ],
+            "columns":[
+                {"name":"nom","label":"Nom"},
+                {"name":"prenom","label":"Prénom"},
+                {"name":"id_role","label":"Rôle"},
+                {"name":"member_since","label":"Membre depuis"}
+            ],
+            "actions":[
+                {"type":"form","action":"controllers/users/remove.php","label":"Supprimer"},
+                {"type":"form","label":"Modifier", "value":"edit_user"},
+                {"type":"form","label":"Voir", "value":"profile"}
+            ]
+        }
+    },
+    "forms":{
+        "contact":{
+            "class": "contact",
+            "id": "contact_form",
+            "name": "contact_form",
+            "content": "Contactez-nous",
+            "action": "actions/contact.php",
+            "fields":[
+                {"type": "input", "name": "nom", "label": "Nom", "required": true},
+                {"type": "input", "name": "prenom", "label": "Prénom", "required": true},
+                {"type": "input", "name": "email", "label": "Adresse email", "required": true},
+                {"type": "textarea", "name": "message", "label": "Message", "required": true}
+            ],
+            "header": [
+                {"type": "h2", "content": "Contactez-nous"},
+                {"type": "p", "content": "Bienvenue sur notre site"}
+            ],
+            "footer": [
+                {"type": "p", "content": "Tous les champs sont obligatoires"}
+            ]
+        },
+        "register": {
+            "class": "login_form",
+            "id": "register_form",
+            "name": "register_form",
+            "content": "S&#039;inscrire",
+            "action": "controllers/auth/register.php",
+            "fields":[
+                {"type": "input", "name": "nom", "label": "Nom", "required": true},
+                {"type": "input", "name": "prenom", "label": "Prénom", "required": true},
+                {"type": "input", "name": "email", "label": "Adresse email", "required": true},
+                {"type": "password", "name": "password", "label": "Mot de passe", "required": true},
+                {"type": "password", "name": "password_confirm", "label": "Confirmer le mot de passe", "required": true},
+                {"type": "hidden", "name": "role", "value": 2}
+            ],
+            "header": [
+                {"type": "h2", "content": "S&#039;inscrire"},
+                {"type": "p", "content": "Bienvenue sur notre site"}
+            ],
+            "footer": [
+                {"type": "p", "content": "Déjà un compte ? <a data-bs-target='#login_modal' data-bs-toggle='modal'>Connectez-vous</a>"}
+            ]
+        },
+        "login": {
+            "class": "login_form",
+            "id": "login_form",
+            "name": "login_form",
+            "content": "Se connecter",
+            "action": "controllers/auth/log_in.php",
+            "fields":[
+                {"type": "input", "name": "email", "label": "Adresse email", "required": true},
+                {"type": "password", "name": "password", "label": "Mot de passe", "required": true}
+            ],
+            "header": [
+                {"type": "h2", "content": "Se connecter"},
+                {"type": "p", "content": "Bienvenue sur notre site"}
+            ],
+            "footer": [
+                {"type": "span", "content": "Pas encore de compte ? <a data-bs-target='#register_modal' data-bs-toggle='modal'>Inscrivez-vous</a>"},
+                {"type": "span", "content": "<a href=\"index.php?page=forgot_password\">Mot de passe oublié ?</a>"}
+            ]
+        },
+        "forgot_password": {
+            "class": "login_form",
+            "id": "forgot_password_form",
+            "name": "forgot_password_form",
+            "content": "Mot de passe oublié",
+            "action": "actions/forgot_password.php",
+            "fields":[
+                {"type": "input", "name": "email", "label": "Adresse email", "required": true}
+            ],
+            "header": [
+                {"type": "h2", "content": "Mot de passe oublié"},
+                {"type": "p", "content": "Bienvenue sur notre site"}
+            ],
+            "footer": [
+                {"type": "span", "content": "Pas encore de compte ? <a href=\"index.php?page=register\">Inscrivez-vous</a>"},
+                {"type": "span", "content": "<a href=\"index.php?page=login\">Se connecter</a>"}
+            ]
+        },
+        "reset_password": {
+            "class": "login_form",
+            "id": "reset_password_form",
+            "name": "reset_password_form",
+            "content": "Réinitialiser le mot de passe",
+            "action": "actions/reset_password.php",
+            "fields":[
+                {"type": "input", "name": "email", "label": "Adresse email", "required": true},
+                {"type": "password", "name": "password", "label": "Nouveau mot de passe", "required": true},
+                {"type": "password", "name": "password_confirm", "label": "Confirmer le mot de passe", "required": true},
+                {"type": "hidden", "name": "token", "value": "token"}
+            ],
+            "header": [
+                {"type": "h2", "content": "Réinitialiser le mot de passe"},
+                {"type": "p", "content": "Bienvenue sur notre site"}
+            ],
+            "footer": [
+                {"type": "span", "content": "Pas encore de compte ? <a href=\"index.php?page=register\">Inscrivez-vous</a>"},
+                {"type": "span", "content": "<a href=\"index.php?page=login\">Se connecter</a>"}
+            ]
+        },
+        "add_product": {
+            "class": "contact",
+            "id": "add_product_form",
+            "name": "add_product_form",
+            "content": "Ajouter un produit",
+            "action": "controllers/products/add.php",
+            "fields":[
+                {"type": "input", "name": "nom", "label": "Nom", "required": true},
+                {"type": "number", "name": "prix", "label": "Prix", "required": true},
+                {"type": "textarea", "name": "description", "label": "Description", "required": true},
+                {"type": "file", "name": "image", "label": "Image", "required": true},
+                {"type": "select", "name": "categorie", "label": "Catégorie", "required": true}
+            ],
+            "header": [
+                {"type": "h2", "content": "Ajouter un produit"},
+                {"type": "p", "content": "Tous les champs sont obligatoires"}
+            ]
+        },
+        "edit_product": {
+            "class": "contact",
+            "id": "edit_product_form",
+            "name": "edit_product_form",
+            "content": "Modifier un produit",
+            "action": "controllers/products/update.php",
+            "fields":[
+                {"type": "hidden", "name": "id"},
+                {"type": "input", "name": "nom", "label": "Nom", "required": true},
+                {"type": "number", "name": "prix", "label": "Prix", "required": true},
+                {"type": "textarea", "name": "description", "label": "Description", "required": true},
+                {"type": "file", "name": "image", "label": "Image", "required": true},
+                {"type": "select", "name": "categorie", "label": "Catégorie", "required": true}
+            ],
+            "header": [
+                {"type": "h2", "content": "Modifier un produit"},
+                {"type": "p", "content": "Bienvenue sur notre site"}
+            ]
+        },
+        "delete_product": {
+            "class": "login_form",
+            "id": "delete_product_form",
+            "name": "delete_product_form",
+            "content": "Supprimer un produit",
+            "action": "controllers/products/remove.php",
+            "fields":[
+                {"type": "hidden", "name": "id", "value": "id"}
+            ],
+            "header": [
+                {"type": "h2", "content": "Supprimer un produit"},
+                {"type": "p", "content": "Bienvenue sur notre site"}
+            ],
+            "footer": [
+                {"type": "span", "content": "<a href=\"index.php?page=login\">Se connecter</a>"}
+            ]
+        },
+        "add_user":{
+            "class": "contact",
+            "id": "add_user_form",
+            "name": "add_user_form",
+            "content": "Ajouter un utilisateur",
+            "action": "controllers/auth/register.php",
+            "fields":[
+                {"type": "input", "name": "nom", "label": "Nom", "required": true},
+                {"type": "input", "name": "prenom", "label": "Prénom", "required": true},
+                {"type": "input", "name": "email", "label": "Adresse email", "required": true},
+                {"type": "password", "name": "password", "label": "Mot de passe", "required": true},
+                {"type": "password", "name": "password_confirm", "label": "Confirmer le mot de passe", "required": true},
+                {"type": "select", "name": "role", "label": "Rôle", "required": true}
+            ],
+            "header": [
+                {"type": "h2", "content": "Ajouter un utilisateur"},
+                {"type": "p", "content": "Bienvenue sur notre site"}
+            ]
+        },
+        "edit_user":{
+            "class": "contact",
+            "id": "edit_user_form",
+            "name": "edit_user_form",
+            "content": "Modifier un utilisateur",
+            "action": "controllers/users/update.php",
+            "fields":[
+                {"type": "hidden", "name": "id"},
+                {"type": "input", "name": "nom", "label": "Nom", "required": true},
+                {"type": "input", "name": "prenom", "label": "Prénom", "required": true},
+                {"type": "input", "name": "email", "label": "Adresse email", "required": true},
+                {"type": "password", "name": "password", "label": "Mot de passe", "required": true},
+                {"type": "password", "name": "password_confirm", "label": "Confirmer le mot de passe", "required": true},
+                {"type": "select", "name": "role", "label": "Rôle", "required": true}
+            ],
+            "header": [
+                {"type": "h2", "content": "Modifier un utilisateur"},
+                {"type": "p", "content": "Bienvenue sur notre site"}
+            ]
+        },
+        "delete_user":{
+            "class": "login_form",
+            "id": "delete_user_form",
+            "name": "delete_user_form",
+            "content": "Supprimer un utilisateur",
+            "action": "controllers/users/remove.php",
+            "fields":[
+                {"type": "hidden", "name": "id", "value": "id"}
+            ],
+            "header": [
+                {"type": "h2", "content": "Supprimer un utilisateur"},
+                {"type": "p", "content": "Bienvenue sur notre site"}
+            ],
+            "footer": [
+                {"type": "span", "content": "<a href=\"index.php?page=login\">Se connecter</a>"}
+            ]
+        },
+        "add_to_cart":{
+            "class": "action_btn",
+            "id": "add_to_cart_form",
+            "name": "add_to_cart_form",
+            "content": "Ajouter",
+            "action": "controllers/cart/add.php",
+            "fields":[
+                {"type": "hidden", "name": "id", "required": true},
+                {"type": "hidden", "name": "quantity", "value": 1, "required": true}
+            ]
+        },
+        "delete_from_cart":{
+            "class": "action_btn",
+            "id": "delete_from_cart_form",
+            "name": "delete_from_cart_form",
+            "content": "Supprimer",
+            "action": "controllers/cart/remove.php",
+            "fields":[
+                {"type": "hidden", "name": "id", "required": true},
+                {"type": "hidden", "name": "quantity", "value": 1, "required": true}
+            ]
+        }
+    },
+    "menu":{
+        "admin": {
+            "class":"menu",
+            "items":[
+                {"label":"Dashboard","value":"dashboard"},
+                {"label":"Produits","value":"products"},
+                {"label":"Utilisateurs","value":"users"},
+                {"label":"Commandes","value":"orders"}
+            ]
+        },
+        "nav": {
+            "class":"menu",
+            "items":[
+                {"label":"Accueil","value":"index.php?page=home"},
+                {"label":"Produits","value":"index.php?page=products"},
+                {"label":"Services","value":"services"},
+                {"label":"A propos","value":"about"},
+                {"label":"Contact","value":"index.php?page=contact"}
+            ]
+        },
+        "user":{
+            "class":"menu_user",
+            "items":[
+                {"label":"Mon compte","value":"index.php?page=profile", "icon":"assets/svg/user.svg"},
+                {"label":"Mon Panier","value":"index.php?page=cart", "icon":"assets/svg/cart.svg"}
+            ]
+        }
+    },
+    "images":{
+        "meta":[
+            {"target":"cart","href":"assets/images/icon-cart.png"},
+            {"target":"contact","href":"assets/images/icon-contact.png"},
+            {"target":"home","href":"assets/images/icon-home.png"},
+            {"target":"products","href":"assets/images/icon-products.png"},
+            {"target":"services","href":"assets/images/icon-services.png"},
+            {"target":"about","href":"assets/images/icon-about.png"},
+            {"target":"dashboard","href":"assets/images/icon-dashboard.png"},
+            {"target":"orders","href":"assets/images/icon-orders.png"},
+            {"target":"profile","href":"assets/images/icon-user.png"}
+        ]
+    },
+    "views":{
+        "dashboard":{
+            "class":"dashboard",
+            "header":[
+                {"type":"h2","content":"Tableau de bord"},
+                {"type":"p","content":"Bienvenue sur votre espace administrateur"}
+            ],
+            "items":[
+                {"title":"Utilisateurs","description":"Gérer les utilisateurs","value":"users"},
+                {"title":"Produits","description":"Gérer les produits","value":"products"},
+                {"title":"Commandes","description":"Gérer les commandes","value":"orders"},
+                {"title":"Statistiques","description":"Voir les statistiques","value":"stats"},
+                {"title":"Paramètres","description":"Modifier les paramètres","value":"settings"}
+            ]
+        }
+    }
+
+}
