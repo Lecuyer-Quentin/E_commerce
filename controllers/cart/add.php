@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once '../../models/Cart.php';
-require_once '../../models/Products.php';
+require_once '../../models/ProduitRepo.php';
 require_once '../../config/database.php';
 
 $cart = new Cart();
@@ -14,9 +14,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $productId = $_POST['id'];
     $quantity = $_POST['quantity'];
 
-    $ps = new Products($pdo);
-    $ps->id_produit = $productId;
-    $product = $ps->read_single();
+    $ps = new ProduitRepo($pdo);
+    $product = $ps->read_one($productId);
     if (!$product) {
         die("Product not found");
     }

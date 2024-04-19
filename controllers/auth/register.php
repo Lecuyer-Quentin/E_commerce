@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../../models/Users.php';
+require_once '../../models/UtilisateurRepo.php';
 require_once '../../config/database.php';
 require_once '../../utils/error_message.php';
 
@@ -31,12 +31,21 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
     //if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/', $password)) {
     //     $error_register[] = translateErrorMessage('Error[PASSWORD_COMPLEXITY]');
     //}
-    if($password !== $password_confirm) {
-        $error_register[] = translateErrorMessage('Error[PASSWORD_CONFIRM]');   
-    }
-    if(!empty($error_register)) {
-        echo nl2br(htmlspecialchars(implode('\n', $error_register)));
-        exit;
+    if(isset($_FILES['image']['tmp_name'])) {
+        $rep = '../../uploads/users/';
+        if(!is_dir($rep)) {
+            mkdir($rep, 0777, true);
+        }
+        $extension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+        $target_file = uniqid() . '.' . $extension;
+        $upload = move_uploaded_file($_FILES['image']['tmp_name'], $rep.$target_file);
+        if(!$upload) {
+            $error_products[] = translateErrorMessage('Error[UPLOAD_IMAGE]');
+        }else{
+            $image = $target_file;
+        }
+    }else{
+        $error_products[] = 'Error[IMAGE]';
     }
 
     $nom = $_POST['nom'];
@@ -46,27 +55,30 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
     $password_confirm = $_POST['password_confirm'];
     $role = $_POST['role'];
 
+    if($password !== $password_confirm) {
+        $error_register[] = translateErrorMessage('Error[PASSWORD_CONFIRM]');   
+    }
+    if(!empty($error_register)) {
+        echo nl2br(htmlspecialchars(implode('\n', $error_register)));
+        exit;
+    }
+
+    //! Password comfirm Problrme !//
     try{
-        $user = new Users($pdo);
+        $user = new UtilisateurRepo($pdo);
         $user->nom = $nom;
         $user->prenom = $prenom;
         $user->email = $email;
-        $user->password = $password;
-        $user->id_role = $role;
-        $user->register();
-        $check_user = $user->connect();
+        $user->password = $password_confirm;
+        $user->idRole = $role;
+        $user->image = $image;
+        $user->create();
+        echo 'success';
 
-        if(!$check_user) {
-            $error_register[] = translateErrorMessage('Error[REGISTER]');
-            echo nl2br(htmlspecialchars(implode('\n', $error_register)));
-        } else {
-            echo 'success';
-            $_SESSION['user'] = $check_user;
-        }
     } catch (Exception $e) {
         $technical_error_message = $e->getMessage();
         $error_register[] = translateErrorMessage($technical_error_message);
-        echo nl2br(htmlspecialchars(implode('\n', $error_register)));
     }
+    
     exit;
 }

@@ -1,6 +1,6 @@
 <?php 
 include_once '../../utils/error_message.php';
-include_once '../../models/Users.php';
+include_once '../../models/UtilisateurRepo.php';
 include_once '../../config/database.php';
 
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -26,20 +26,21 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $id = $_POST['id'];
+    $id = intval($_POST['id']);
     $nom = $_POST['nom'];
     $prenom = $_POST['prenom'];
     $email = $_POST['email'];    
-    $role = $_POST['role'];
+    $role = intval($_POST['role']);
 
     try{
-        $user = new Users($pdo);
-        $user->id_utilisateur = $id;
-        $user->nom = $nom;
-        $user->prenom = $prenom;
-        $user->email = $email;
-        $user->id_role = $role;
-        $user->update();
+        $user_to_update = new UtilisateurRepo($pdo);
+        $user_to_update->nom = $nom;
+        $user_to_update->prenom = $prenom;
+        $user_to_update->email = $email;
+        $user_to_update->idRole = $role;
+        $user_to_update->update($id);
+
+
 
         //? Utiliser par Ajax pour savoir si la requête a fonctionné
         echo 'success';
