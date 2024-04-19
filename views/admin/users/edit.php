@@ -1,22 +1,10 @@
 <?php
-require_once 'class/Form.php';
-require_once 'utils/get_JSON.php';
-require_once 'api/users/get_user.php';
-require_once 'api/get_roles.php';
 
 if(isset($_POST['id'])){
     $id = $_POST['id'];
 }else{
     $id = $_GET['id'];
 }
-
-//! Probable doublon de code a verifier
-function display_role($role){
-    foreach ($role as $key => $rol) {
-        $role[$key]['nom'] = ucfirst($rol['nom']);
-    }
-    return $role;
-}//!
 
 function add_user_info($user){
     $role = get_roles();

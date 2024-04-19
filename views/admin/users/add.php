@@ -1,7 +1,7 @@
 <?php
-    require_once 'utils/get_JSON.php';
-    require_once 'api/get_roles.php';
-    $roles = get_roles();
+    global $pdo;
+    $roles = new RoleRepo($pdo);
+    $roles = $roles->read(); 
     $data = get_JSON('data.json','forms', 'add_user');
     $data['fields'][5]['options'] = $roles;
     $form = new Form();
@@ -15,6 +15,6 @@
         'modal_body' => $form->generateForm()
     ];
     $modal_add_user = new Modal($modal_data);
-?>
+    $modal_add_user->modal_trigger();
+    echo $modal_add_user->render();
 
-    <?php echo $modal_add_user->modal_trigger(); ?>
