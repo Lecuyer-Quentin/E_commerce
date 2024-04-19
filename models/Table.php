@@ -1,5 +1,5 @@
 <?php
-require_once 'Form.php';
+//require_once 'Form.php';
 
 class Table{
     private $data;
@@ -72,7 +72,7 @@ class Table{
         return $foot;
     }
 
-    private function action_item($id, $value, $label, $type, $action) {
+    private function action_item($id, $label, $type, $action) {
        switch($type) {
            case 'form':
                $action_btn = "<form method='post' class='action_btn' action='$action'>";
@@ -92,7 +92,17 @@ class Table{
         foreach($this->items as $item) {
             $column .= "<tr class='table_row'>";
             foreach($this->columns as $col) {
-                $column .= "<td class='table_cell'>" . $item->{$col['name']} . "</td>";
+                if(is_array($item->get_value_of($col['name']))) {
+                    $column .= "<td class='table_cell'>";
+                        $column .= "<p>";
+                            foreach($item->get_value_of($col['name']) as $value) {
+                                $column .= $value . "<br>";
+                            }
+                        $column .= "</p>";
+                    $column .= "</td>";
+                } else {
+                    $column .= "<td class='table_cell'>" . $item->get_value_of($col['name']) . "</td>";
+                }
             }
             
             if($this->actions) {
@@ -107,9 +117,14 @@ class Table{
                     $label = $action['label'];
                     $type = $action['type'];
 
-                    $id = $item->getId();
+                    $id = null;
+                    if($action instanceof Produit){
+                        $id = $action->get_idProduit();
+                    } elseif ($action instanceof Utilisateur){
+                        $id = $action->get_idUtilisateur();
+                    }
                     $column .= '<li>';
-                    $column .= $this->action_item($id, $value, $label, $type, $act);
+                    $column .= $this->action_item($id, $label, $type, $act);
                     $column .= '</li>';
                 }
                 $column .= '</ul>';

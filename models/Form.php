@@ -101,17 +101,30 @@ class Form {
                     $input .= "<label for='$name'>$label</label>";
                     $input .= "<input type='$type' name='$name' id='$name' required='$required'>";
                     break;
-                //case 'select':
-                //    $options = $field['options'];
-                //    $input .= "<label for='$name'>$label</label>";
-                //    $input .= "<select name='$name' id='$name' required='$required'>";
-                //    foreach($options as $option) {
-                //        $name = $option[1];
-                //        $value = $option[0];
-                //        $input .= "<option value='$value'>$name</option>";
-                //    }
-                //    $input .= "</select>";
-                //    break;
+                case 'select':
+                    $options = $field['options'];
+                    $input .= "<label for='$name'>$label</label>";
+                    $input .= "<select name='$name' id='$name' required='$required'>";
+                    foreach($options as $option) {
+                        $name = $option->get_nom();
+                        if($option instanceof Role){
+                            $value = $option->get_idRole();
+                        }else if($option instanceof Categorie){
+                            $value = $option->get_idCategorie();
+                        }else if($option instanceof Special){
+                            $value = $option->get_idSpecial();
+                        }else if(is_array($option)) {
+                            $value = $option['value'];
+                        //}else if(is_object($option)) {
+                        //    $value = $option->get_id();
+                        }else{
+                            $value = $option;
+                        }
+                        
+                        $input .= "<option value='$value'>$name</option>";
+                    }
+                    $input .= "</select>";
+                    break;
                 case 'file':
                     $input .= "<label for='$name'>$label</label>";
                     $input .= "<input type='$type' name='$name' id='$name' required='$required' accept='image/*'>";

@@ -9,14 +9,14 @@ class Modal
     public $modal_label;
     public $modal_body;
 
-    public function __construct($data)
+    public function __construct($data = [])
     {
         $this->data = $data;
-        $this->btn_name = $this->data['btn_name'];
-        $this->btn_target = $this->data['btn_target'];
-        $this->modal_id = $this->data['modal_id'];
-        $this->modal_label = $this->data['modal_label'];
-        $this->modal_body = $this->data['modal_body'];
+        $this->btn_name = $this->data['btn_name'] ?? null;
+        $this->btn_target = $this->data['btn_target'] ?? null;
+        $this->modal_id = $this->data['modal_id'] ?? null;
+        $this->modal_label = $this->data['modal_label'] ?? null;
+        $this->modal_body = $this->data['modal_body'] ?? null;
     }
 
     public function modal_trigger()
