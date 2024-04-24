@@ -3,6 +3,7 @@ require 'utils/autoload.php';
 session_start();
 require 'config/database.php';
 require 'utils/get_JSON.php';
+require 'utils/error_message.php';
 $page = isset($_GET['page']) ? $_GET['page'] : 'home';
 $meta = get_JSON('data.json', 'images', 'meta');
 
@@ -51,6 +52,11 @@ ini_set('error_log', 'error/error.log');
             <script src="assets/js/ajax/favorite.js"></script>
             <script src="assets/js/ajax/log_in.js"></script>
             <script src="assets/js/ajax/register.js"></script>
+            <script src="assets/js/ajax/contact.js"></script>
+            <script src='assets/js/ajax/search.js'></script>
+            <script src='assets/js/ajax/products/add.js'></script>
+            <script src='assets/js/ajax/products/remove.js'></script>
+            <script src='assets/js/ajax/users/remove.js'></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </body>
 </html>
