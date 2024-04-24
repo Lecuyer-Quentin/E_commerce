@@ -5,26 +5,35 @@ registerForm.addEventListener('submit', function(e) {
         type: 'POST',
         url: $(this).attr('action'),
         data: $(this).serialize(),
+        dataType: 'json',
         success: function(data) {
-            if (data === 'success') {
-               // console.log('Inscription réussie.');
-                $('#success-message').html('Inscription réussie.');
+            if (data.status == 'success') {
+                $('#alert_message_register_form').removeClass('d-none');
+                $('#alert_message_register_form').addClass('form_message success');
+                $('#alert_message_register_form').html(data.message);
                 setTimeout(function() {
-                    $('#success-message').html('');
-                    window.location.href = 'index.php';
-                }, 2000);
-            } else {
-                $('#error-message').html(data);
+                    window.location.href = data.redirect;
+                    $('#alert_message_register_form').removeClass('form_message success');
+                }, 3000);
+            }
+            if (data.status == 'error') {
+                $('#alert_message_register_form').removeClass('d-none');
+                $('#alert_message_register_form').addClass('form_message error');
+                $('#alert_message_register_form').html(data.message);
                 setTimeout(function() {
-                    $('#error-message').html('');
-                }, 2000);
+                    $('#alert_message_register_form').html('');
+                    $('#alert_message_register_form').removeClass('form_message error');
+                }, 3000);
             }
         },
         error: function( jqXhr, textStatus, errorThrown ){
-            $('#error-message').html('Une erreur est survenue, veuillez réessayer.');
-            //setTimeout(function() {
-            //    $('#error-message').html('');
-            //}, 2000);
+            $('#alert_message_register_form').removeClass('d-none');
+            $('#alert_message_register_form').addClass('form_message error');
+            $('#alert_message_register_form').html('Error: ' + errorThrown);
+            setTimeout(function() {
+                $('#alert_message_register_form').html('');
+                $('#alert_message_register_form').removeClass('form_message error');
+            }, 3000);
         }
     });
 });
