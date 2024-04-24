@@ -85,6 +85,9 @@ class Card{
     }
 
     public function card_md(){
+
+        $fav_value = (isset($_SESSION['favorite']) && in_array($this->get_data_of('idProduit'), $_SESSION['favorite'])) || (isset($_COOKIE['favorite'])) ? 'remove' : 'add';
+        $fav_icon = $fav_value == 'add' ? 'assets/svg/heart_bm_grey.svg' : 'assets/svg/heart_bm_red.svg';
         
         $card = '<div class="card text-white bg-dark text-center p-2 position-relative" style="width: 22rem; height: 30rem;">';
             if(!empty($this->get_data_of('special'))){
@@ -99,18 +102,13 @@ class Card{
             $card .= '<div class="card-img-overlay w-100 h-100 d-flex flex-column justify-content-end">';
 
                 $card .= '<div class="position-absolute top-0 end-0">';
-                    $card .= '<form action="controllers/favorite/add_favorite.php" method="post" class="">';
+                    $card .= '<form action="controllers/favorite/favorite.php" method="post" class="">';
                         $card .= '<input type="hidden" name="id" value="' . $this->get_data_of('idProduit') . '">';
+                        $card .= '<input type="hidden" name="favorite" value='.$fav_value.'>';
                         $card .= '<button type="submit" class="btn btn-link" id="color-change">';
-                            $card .= (isset($_SESSION['favorite'])) ? '<img src="assets/svg/heart_bm_red.svg" alt="add to favorite" width="20" height="20">' : '<img src="assets/svg/heart_bm_grey.svg" alt="add to favorite" width="20" height="20">';
+                            $card .= '<img src="' . $fav_icon . '" alt="add to favorite" width="20" height="20">';
                         $card .= '</button>';
                     $card .= '</form>';
-                    //$card .= '<form action="controllers/favorite/remove_favorite.php" method="post" class="">';
-                    //    $card .= '<input type="hidden" name="id" value="' . $this->get_data_of('idProduit') . '">';
-                    //    $card .= '<button type="submit" class="btn btn-link" id="color-change">';
-                    //        $card .= (!isset($_COOKIE['favorite']) || !isset($_SESSION['favorite'])) ? '<img src="assets/svg/heart_bm_red.svg" alt="add to favorite" width="20" height="20">' : '<img src="assets/svg/heart_bm_grey.svg" alt="add to favorite" width="20" height="20">';
-                    //    $card .= '</button>';
-                    //$card .= '</form>';
                 $card .= '</div>';
 
                 $card .= '<div class="card-footer d-flex justify-content-between align-item-center border border-3 border-dark border-start-0 border-end-0 shadow">';
