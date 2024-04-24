@@ -234,6 +234,7 @@ class UtilisateurRepo
     public function update(int $idUtilisateur) {
         try{
             $this->pdo->beginTransaction();
+
             $query = 'UPDATE ' . $this->table . ' SET nom = :nom, prenom = :prenom, email = :email, image = :image WHERE idUtilisateur = :idUtilisateur';
             $stmt = $this->pdo->prepare($query);
             $data = $this->prepare_data();
@@ -262,6 +263,28 @@ class UtilisateurRepo
     }
 
     public function delete (int $idUtilisateur){
+        try{
+            $this->pdo->beginTransaction();
+
+            $query = 'DELETE FROM utilisateur_role WHERE fkIdUtilisateur = :idUtilisateur';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindParam(':idUtilisateur', $idUtilisateur);
+            $stmt->execute();
+            
+            $query = 'DELETE FROM ' . $this->table . ' WHERE idUtilisateur = :idUtilisateur';
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindParam(':idUtilisateur', $idUtilisateur);
+            $stmt->execute();
+
+            
+
+            $this->pdo->commit();
+            return true;
+        } catch(PDOException $e) {
+            $this->pdo->rollBack();
+            printf("Error: %s.\n", $e->getMessage());
+            return false;
+        }
 
     }
 }
