@@ -6,63 +6,59 @@ include_once '../utils/error_message.php';
 
 
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $error_search = [];
     if(!isset($_POST['search']) || empty($_POST['search'])) {
-        $error_search[] = translateErrorMessage('Error[SEARCH]');
+        $response = array(
+            "status" => "error",
+            "message" => "Veuillez saisir un terme de recherche"
+        );
+        echo json_encode($response);
         exit;
+    }else {
+        $search = $_POST['search'];
+        $search = stripslashes($search);
+        $search = htmlspecialchars($search);
+        $search = strip_tags($search);
+        $search = trim($search);
     }
-    $search = $_POST['search'];
-    $search = stripslashes($search);
-    $search = htmlspecialchars($search);
-    $search = strip_tags($search);
-    $search = trim($search);
-    
 
     try{
         $product = new ProduitRepo($pdo);
         $products = $product->search($search);
-        if($products) {
+        if(!$products) {
+            $error_search = 'Aucun résultat trouvé';
+        } else {
+            $results = array();
             foreach($products as $product) {
                 $data = $product->get_data();
                 $card = new Card($data);
-                echo $card->card_search();
+                $results[] = $card->card_search();
             }
-        }else{
-            echo 'success';
+            $response = array(
+                "status" => "success",
+                "results" => $results
+            );
+            echo json_encode($response);
+            exit;
         }
+
     } catch (Exception $e) {
         $technical_error_message = $e->getMessage();
-        $error_search[] = translateErrorMessage($technical_error_message);
-        echo nl2br(htmlspecialchars(implode('\n', $error_search)));
-        error_log($e->getMessage());
+        $error_search = translateErrorMessage($technical_error_message);
     }
+
+    if(!empty($error_search)) {
+        $response = array(
+            "status" => "error",
+            "message" => $error_search
+        );
+        echo json_encode($response);
+        exit;
+    }
+
+    if(isset($_SERVER['HTTP_REFERER'])) {
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+    } else {
+        header("Location: /");
+    }
+    exit;
 }
-
-
-?>
-
-<script>
-    $document.ready(function() {
-        $('#search_form').on('submit', function(e) {
-        e.preventDefault();
-
-        $.ajax({
-            type: 'POST',
-            url: $(this).attr('action'),
-            data: $(this).serialize(),
-            success: function(data) {
-                if(data !== 'success') {
-                    $('#search_result').html(data);
-                }else{
-                    $('#search_error').html('Resultat non trouver');
-                }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                $('#search_error').html('Une erreur est survenue lors de la recherche.');
-            }
-        });
-    }
-    );
-});
-
-</script>
