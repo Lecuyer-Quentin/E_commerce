@@ -1,8 +1,8 @@
 <?php
-//require_once 'Form.php';
 
 class Table{
     private $data;
+    public $id;
     public $items;
     private $columns;
     private $actions;
@@ -16,12 +16,19 @@ class Table{
 
     public function setData($data){
         $this->data = $data;
+        $this->id = $data['id'];
         $this->items = $data['items'];
         $this->columns = $data['columns'];
         $this->actions = $data['actions'] ?? null;
         $this->header = $data['header'] ?? null;
         $this->footer = $data['footer'] ?? null;
         $this->class = $data['class'] ?? null;
+    }
+
+    private function generateAlert(){
+        $alert = "<div id='table_alert_$this->id' class='alert d-none' role='alert'>";
+        $alert .= "</div>";
+        return $alert;
     }
 
     private function generateHeader() {
@@ -41,9 +48,11 @@ class Table{
                             $head .= "<$type>$content</$type>";
                         }
                     }
-                    $head .= "</th>";    
+                    $head .= $this->generateAlert();  
+
+                    $head .= "</th>"; 
             $head .= "</tr>";
-            }
+        }
             return $head;
     }
     private function generateTableHead() {
@@ -72,18 +81,30 @@ class Table{
         return $foot;
     }
 
-    private function action_item($id, $label, $type, $action) {
+    private function action_item($action, $item) {
+        $value = $action['value'] ?? null;
+        $act = $action['action'] ?? null;
+        $label = $action['label'];
+        $type = $action['type'];
+        $icon = $action['icon'] ?? null;
+        $id = null;
+
+        if($value) {
+            $id = $item->get_value_of($value);
+        }
+        $action_btn = null;
        switch($type) {
            case 'form':
-               $action_btn = "<form method='post' class='action_btn' action='$action'>";
+               $action_btn = "<form method='post' action='$act' id='action_btn_$this->id' class='my-2'>";
                    $action_btn .= "<input type='hidden' name='id' value='$id'>";
-                   $action_btn .= "<button type='submit' name='id' value='$id'>$label</button>";
+                   $action_btn .= "<button type='submit' class='btn btn-light w-100 text-start '>";
+                     if($icon) {
+                          $action_btn .= "<img src='$icon' alt='$label' class='mx-1'>";
+                     }
+                     $action_btn .= "$label</button>";
                $action_btn .= "</form>";
                break;
-           case 'link':
-               $action_btn = "<button class='action_btn'><a href='$action'>$label</a></button>";
-               break;
-       }
+        }
        return $action_btn;
     }
 
@@ -110,21 +131,11 @@ class Table{
                 $column .= '<div class="dropdown">';
                 $column .= '<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">';
                 $column .= '</button>';
-                $column .= '<ul class="dropdown-menu">';
+                $column .= '<ul class="dropdown-menu border-0">';
                 foreach($this->actions as $action) {
-                    $value = $action['value'] ?? null;
-                    $act = $action['action'] ?? null;
-                    $label = $action['label'];
-                    $type = $action['type'];
-
-                    $id = null;
-                    if($action instanceof Produit){
-                        $id = $action->get_idProduit();
-                    } elseif ($action instanceof Utilisateur){
-                        $id = $action->get_idUtilisateur();
-                    }
+                    
                     $column .= '<li>';
-                    $column .= $this->action_item($id, $label, $type, $act);
+                    $column .= $this->action_item($action, $item);
                     $column .= '</li>';
                 }
                 $column .= '</ul>';
@@ -132,9 +143,8 @@ class Table{
                 $column .= "</td>";
             }
             $column .= "</tr>";
-        }
+        }    
         return $column;
-     
     }
 
     public function generateTable(){

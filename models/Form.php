@@ -39,6 +39,12 @@ class Form {
         return $this->data;
     }
 
+
+    public function generateError(){
+            $error = "<div id='alert_message_$this->id' class='d-none'></div>";
+        return $error;
+    }
+
     private function generateHeader() {
         $head = null;
         if($this->header) {
@@ -48,8 +54,7 @@ class Form {
                     $content = $line['content'];
                     $head .= "<$type>$content</$type>";
                 }
-                $head .= "<div id='error-message' style='color: red; text-align: center; font-size: .9em; font-weight: bold;'></div>";
-                $head .= "<div id='success-message' style='color: green; text-align: center; font-size: .9em; font-weight: bold;'></div>";
+
             $head .= "</div>";
         }
         return $head;
@@ -83,51 +88,63 @@ class Form {
             switch($type){
                 case 'input':
                 case 'number':
-                    $input .= "<label for='$name'>$label</label>";
-                    $input .= "<input type='$type' name='$name' id='$name' value='$value' required='$required'>";
+                    $input .= "<div class='form-group'>"; 
+                        $input .= "<label for='$name'>$label</label>";
+                        $input .= "<input type='$type' name='$name' id='$name' value='$value' required='$required'>";
+                    $input .= "</div>";
                     break;
                 case 'textarea':
-                    $input .= "<label for='$name'>$label</label>";
-                    $input .= "<textarea name='$name' id='$name' required='$required'>$value</textarea>";
+                    $input .= "<div class='form-group'>";
+                        $input .= "<label for='$name'>$label</label>";
+                        $input .= "<textarea name='$name' id='$name' required='$required'>$value</textarea>";
+                    $input .= "</div>";
                     break;
                 case 'hidden':
                     $input .= "<input type='hidden' name='$name' value='$value'>";
                     break;
                 case "password":
-                    $input .= "<label for='$name'>$label</label>";
-                    $input .= "<input type='$type' name='$name' id='$name' required='$required'>";
+                    $input .= "<div class='form-group'>"; 
+                        $input .= "<label for='$name'>$label</label>";
+                        $input .= "<input type='$type' name='$name' id='$name' required='$required'>";
+                    $input .= "</div>";
                     break;
                 case 'date':
-                    $input .= "<label for='$name'>$label</label>";
-                    $input .= "<input type='$type' name='$name' id='$name' required='$required'>";
+                    $input .= "<div class='form-group'>";
+                        $input .= "<label for='$name'>$label</label>";
+                        $input .= "<input type='$type' name='$name' id='$name' required='$required'>";
+                    $input .= "</div>";
                     break;
                 case 'select':
                     $options = $field['options'];
-                    $input .= "<label for='$name'>$label</label>";
-                    $input .= "<select name='$name' id='$name' required='$required'>";
-                    foreach($options as $option) {
-                        $name = $option->get_nom();
-                        if($option instanceof Role){
-                            $value = $option->get_idRole();
-                        }else if($option instanceof Categorie){
-                            $value = $option->get_idCategorie();
-                        }else if($option instanceof Special){
-                            $value = $option->get_idSpecial();
-                        }else if(is_array($option)) {
-                            $value = $option['value'];
-                        //}else if(is_object($option)) {
-                        //    $value = $option->get_id();
-                        }else{
-                            $value = $option;
+                    $input .= "<div class='form-group'>";
+                        $input .= "<label for='$name'>$label</label>";
+                        $input .= "<select name='$name' id='$name' required='$required'>";
+                        foreach($options as $option) {
+                            $name = $option->get_nom();
+                            if($option instanceof Role){
+                                $value = $option->get_idRole();
+                            }else if($option instanceof Categorie){
+                                $value = $option->get_idCategorie();
+                            }else if($option instanceof Special){
+                                $value = $option->get_idSpecial();
+                            }else if(is_array($option)) {
+                                $value = $option['value'];
+                            //}else if(is_object($option)) {
+                            //    $value = $option->get_id();
+                            }else{
+                                $value = $option;
+                            }
+
+                            $input .= "<option value='$value'>$name</option>";
                         }
-                        
-                        $input .= "<option value='$value'>$name</option>";
-                    }
-                    $input .= "</select>";
+                        $input .= "</select>";
+                    $input .= "</div>";
                     break;
                 case 'file':
-                    $input .= "<label for='$name'>$label</label>";
-                    $input .= "<input type='$type' name='$name' id='$name' required='$required' accept='image/*'>";
+                    $input .= "<div class='form-group'>";  
+                        $input .= "<label for='$name'>$label</label>";
+                        $input .= "<input type='$type' name='$name' id='$name' required='$required' accept='image/*'>";
+                    $input .= "</div>";
                     break;
                 case "link":
                     $input .= "<a href='$value'>$label</a>";
@@ -146,6 +163,7 @@ class Form {
             $form .= $this->generateHeader();
             $form .= $this->generateField();
             $form .= $this->generateBtn();
+            $form .= $this->generateError();
             $form .= $this->generateFooter();
         $form .= "</form>";
         return $form;
