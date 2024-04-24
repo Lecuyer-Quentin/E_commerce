@@ -1,8 +1,9 @@
 main{
-    padding: 50px 0;
+    margin-top: 70px;
+    min-height: 100vh;
 }
 article{
-    padding: 25px 0;
+    margin-bottom: 40px;
 }
 
 h1,h2,h3,h4,h5,h6{
@@ -16,16 +17,22 @@ p{
 }
 img{
     max-width: 100%;
-    height: auto;
     box-sizing: content-box;
+    object-fit: cover; 
+    object-position: center;
 }
 
-.test{
-    &:hover{
-        opacity: 1;
+.testHover{
+    & a{
+        transition: all 0.3s ease-in-out;
+    }
+    &:hover a{
+        transform: scale(1.05);
+    }
+    &:hover a img{
+        transform: translateX(5px);
     }
 }
-
 ul,li,a{
     list-style-type: none;
     padding: 0;
