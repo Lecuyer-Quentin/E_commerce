@@ -2,6 +2,7 @@
 
     "tables":{
         "products": {
+            "id":"products_table",
             "class":"table",
             "header":[
                 {"type":"h2","content":"Produits"},
@@ -10,15 +11,16 @@
             "columns":[
                 {"name":"nom","label":"Nom"},
                 {"name":"prix","label":"Prix"},
-                {"name":"id_categorie","label":"Catégorie"},
-                {"name":"date_creation","label":"Date de création"}
+                {"name":"categorie","label":"Catégorie"},
+                {"name":"date","label":"Date de création"}
             ],
             "actions":[
-                {"type":"form","action":"controllers/products/remove.php","label":"Supprimer"},
-                {"type":"form","label":"Modifier", "value":"edit_product"}
+                {"type":"form","action":"controllers/products/remove.php","label":"Supprimer", "value":"idProduit", "icon":"assets/svg/trash.svg"},
+                {"type":"collapse", "action":"edit_product", "label":"Modifier", "value":"idProduit", "icon":"assets/svg/edit.svg"}
             ]
         },
         "users": {
+            "id":"users_table",
             "class":"table",
             "header":[
                 {"type":"h2","content":"Utilisateurs"},
@@ -27,23 +29,22 @@
             "columns":[
                 {"name":"nom","label":"Nom"},
                 {"name":"prenom","label":"Prénom"},
-                {"name":"id_role","label":"Rôle"},
-                {"name":"member_since","label":"Membre depuis"}
+                {"name":"role","label":"Rôle"},
+                {"name":"date","label":"Membre depuis"}
             ],
             "actions":[
-                {"type":"form","action":"controllers/users/remove.php","label":"Supprimer"},
-                {"type":"form","label":"Modifier", "value":"edit_user"},
-                {"type":"form","label":"Voir", "value":"profile"}
+                {"type":"form","action":"controllers/users/remove.php","label":"Supprimer", "value":"idUtilisateur", "icon":"assets/svg/trash.svg"},
+                {"type":"form","label":"Modifier", "action":"edit_user", "icon":"assets/svg/edit.svg"}
             ]
         }
     },
     "forms":{
         "contact":{
-            "class": "contact",
+            "class": "contact_form",
             "id": "contact_form",
             "name": "contact_form",
             "content": "Contactez-nous",
-            "action": "actions/contact.php",
+            "action": "controllers/contact.php",
             "fields":[
                 {"type": "input", "name": "nom", "label": "Nom", "required": true},
                 {"type": "input", "name": "prenom", "label": "Prénom", "required": true},
@@ -62,7 +63,7 @@
             "class": "login_form",
             "id": "register_form",
             "name": "register_form",
-            "content": "S&#039;inscrire",
+            "content": "S&apos;inscrire",
             "action": "controllers/auth/register.php",
             "fields":[
                 {"type": "input", "name": "nom", "label": "Nom", "required": true},
@@ -70,10 +71,10 @@
                 {"type": "input", "name": "email", "label": "Adresse email", "required": true},
                 {"type": "password", "name": "password", "label": "Mot de passe", "required": true},
                 {"type": "password", "name": "password_confirm", "label": "Confirmer le mot de passe", "required": true},
-                {"type": "hidden", "name": "role", "value": 2}
+                {"type": "hidden", "name": "role", "value": 1}
             ],
             "header": [
-                {"type": "h2", "content": "S&#039;inscrire"},
+                {"type": "h2", "content": "S&apos;inscrire"},
                 {"type": "p", "content": "Bienvenue sur notre site"}
             ],
             "footer": [
@@ -139,17 +140,19 @@
             ]
         },
         "add_product": {
-            "class": "contact",
+            "class": "login_form",
             "id": "add_product_form",
             "name": "add_product_form",
             "content": "Ajouter un produit",
             "action": "controllers/products/add.php",
+            "enctype": "multipart/form-data",
             "fields":[
                 {"type": "input", "name": "nom", "label": "Nom", "required": true},
                 {"type": "number", "name": "prix", "label": "Prix", "required": true},
                 {"type": "textarea", "name": "description", "label": "Description", "required": true},
                 {"type": "file", "name": "image", "label": "Image", "required": true},
-                {"type": "select", "name": "categorie", "label": "Catégorie", "required": true}
+                {"type": "select", "name": "categorie", "label": "Catégorie", "required": true},
+                {"type": "select", "name": "special", "label": "Spécial", "required": true}
             ],
             "header": [
                 {"type": "h2", "content": "Ajouter un produit"},
@@ -193,18 +196,20 @@
             ]
         },
         "add_user":{
-            "class": "contact",
+            "class": "login_form",
             "id": "add_user_form",
             "name": "add_user_form",
             "content": "Ajouter un utilisateur",
             "action": "controllers/auth/register.php",
+            "enctype": "multipart/form-data",
             "fields":[
                 {"type": "input", "name": "nom", "label": "Nom", "required": true},
                 {"type": "input", "name": "prenom", "label": "Prénom", "required": true},
                 {"type": "input", "name": "email", "label": "Adresse email", "required": true},
                 {"type": "password", "name": "password", "label": "Mot de passe", "required": true},
                 {"type": "password", "name": "password_confirm", "label": "Confirmer le mot de passe", "required": true},
-                {"type": "select", "name": "role", "label": "Rôle", "required": true}
+                {"type": "select", "name": "role", "label": "Rôle", "required": true},
+                {"type": "file", "name": "image", "label": "Avatar", "required": false}
             ],
             "header": [
                 {"type": "h2", "content": "Ajouter un utilisateur"},
@@ -319,12 +324,12 @@
                 {"type":"h2","content":"Tableau de bord"},
                 {"type":"p","content":"Bienvenue sur votre espace administrateur"}
             ],
-            "items":[
-                {"title":"Utilisateurs","description":"Gérer les utilisateurs","value":"users"},
-                {"title":"Produits","description":"Gérer les produits","value":"products"},
-                {"title":"Commandes","description":"Gérer les commandes","value":"orders"},
-                {"title":"Statistiques","description":"Voir les statistiques","value":"stats"},
-                {"title":"Paramètres","description":"Modifier les paramètres","value":"settings"}
+            "cards":[
+                {"title":"Utilisateurs","description":"Gérer les utilisateurs","value":"users", "footer":"roles"},
+                {"title":"Produits","description":"Gérer les produits","value":"products", "footer":"categories"},
+                {"title":"Commandes","description":"Gérer les commandes","value":"orders", "footer":"status"},
+                {"title":"Statistiques","description":"Voir les statistiques","value":"stats", "footer":"stats"},
+                {"title":"Paramètres","description":"Modifier les paramètres","value":"settings", "footer":"settings"}
             ]
         }
     }
