@@ -23,25 +23,37 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         $error_products[] = translateErrorMessage('Error[SPECIAL]');
     }
 
-    if(isset($_FILES['image']['tmp_name'])) {
-        $rep = '../../uploads/products/';
-        if(!is_dir($rep)) {
-            mkdir($rep, 0777, true);
+
+    //! Ne fonctionne pas correctement
+    if(isset($_POST['image']) && !empty($_POST['image'])){
+        if(isset($_FILES['image']['tmp_name'])) {
+            //! a changer par DOCUMENT_ROOT
+            $rep = '../../uploads/products/';
+            if(!is_dir($rep)) {
+                mkdir($rep, 0777, true);
+            }
+            $extension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+            $target_file = uniqid() . '.' . $extension;
+            $upload = move_uploaded_file($_FILES['image']['tmp_name'], $rep.$target_file);
+            if(!$upload) {
+                $error_products[] = translateErrorMessage('Error[UPLOAD_IMAGE]');
+            }else{
+               $image = $target_file;
+            }
+        } else {
+            $error_products[] = translateErrorMessage('Error[IMAGE]');
         }
-        $extension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-        $target_file = uniqid() . '.' . $extension;
-        $upload = move_uploaded_file($_FILES['image']['tmp_name'], $rep.$target_file);
-        if(!$upload) {
-            $error_products[] = translateErrorMessage('Error[UPLOAD_IMAGE]');
-        }else{
-            $image = $target_file;
-        }
-    }else{
-        $error_products[] = 'Error[IMAGE]';
+    } else {
+        $image = '';
     }
+    //!
 
     if(!empty($error_products)) {
-        echo nl2br(htmlspecialchars(implode('\n', $error_products)));
+        $response = [
+            'status' => 'error',
+            'message' => $error_products
+        ];
+        echo json_encode($response);
         exit;
     }
 
@@ -50,6 +62,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     $prix = $_POST['prix'];
     $categorie = $_POST['categorie'];
     $special = $_POST['special'];
+    $image = $target_file;
 
     try {
         $product = new ProduitRepo($pdo);
@@ -59,14 +72,29 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         $product->idCategorie = $categorie;
         $product->image = $image;
         $product->idSpecial = $special;
-        $product->create();
-        echo 'success';
+        $product = $product->create();
+
+        if(!$product) {
+            $error_products[] = 'Error[CREATE_PRODUCT]';
+        } else {
+            $response = [
+                'status' => 'success',
+                'message' => 'Le produit a bien été ajouté',
+                'redirect' => $_SERVER['HTTP_REFERER']
+            ];
+            echo json_encode($response);
+            exit;
+        }
 
     } catch (Exception $e) {
         $technical_error_message = $e->getMessage();
         $error_products[] = translateErrorMessage($technical_error_message);
-        echo nl2br(htmlspecialchars(implode('/n', $error_products)));
+    }
+
+    if(isset($_SERVER['HTTP_REFERER'])) {
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+    } else {
+        header("Location: /");
     }
     exit;
-
 }
